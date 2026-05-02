@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 // Auth Flow
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';

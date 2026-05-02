@@ -68,12 +68,14 @@ class Organ {
   final String name;
   final String description;
   final int percentage;
+  final String? iconPath;
 
   Organ({
     required this.id,
     required this.name,
     required this.description,
     this.percentage = 0,
+    this.iconPath,
   });
 }
 
@@ -82,36 +84,43 @@ final List<Organ> ALL_ORGANS = [
     id: "esophagus",
     name: "المريء",
     description: "أنبوب عضلي يربط الحلق بالمعدة",
+    iconPath: "assets/images/icons8-anatomy-48.png",
   ),
   Organ(
     id: "stomach",
     name: "المعدة",
     description: "تقوم بهضم الطعام ميكانيكياً وكيميائياً",
+    iconPath: "assets/images/icons8-stomach-100.png",
   ),
   Organ(
     id: "liver",
     name: "الكبد",
     description: "أكبر غدة في الجسم، يفرز العصارة الصفراوية",
+    iconPath: "assets/images/icons8-liver-64.png",
   ),
   Organ(
     id: "pancreas",
     name: "البنكرياس",
     description: "يفرز إنزيمات هاضمة وهرمونات مثل الإنسولين",
+    iconPath: "assets/images/icons8-pancreas-64.png",
   ),
   Organ(
     id: "small_intestine",
     name: "الأمعاء الدقيقة",
     description: "يتم فيها امتصاص معظم العناصر الغذائية",
+    iconPath: "assets/images/small_intestine.png",
   ),
   Organ(
     id: "colon",
     name: "القولون",
     description: "يمتص الماء ويشكل الفضلات (الأمعاء الغليظة)",
+    iconPath: "assets/images/icons8-colon-100.png",
   ),
   Organ(
     id: "rectum",
     name: "الشرج",
     description: "الجزء الأخير لتخزين وطرح الفضلات",
+    iconPath: "assets/images/rectum_icon.png",
   ),
 ];
 
@@ -152,6 +161,7 @@ class _Step2OrganSymptomsState extends State<Step2OrganSymptoms> {
               name: organ.name,
               description: organ.description,
               percentage: percentage,
+              iconPath: organ.iconPath,
             ),
           );
         }
@@ -365,80 +375,99 @@ class _Step2OrganSymptomsState extends State<Step2OrganSymptoms> {
                   ),
                 ),
               ),
-              // Organ Spots (only for active organs)
-              if (hoveredOrgan?.id == 'esophagus' &&
-                  activeOrgans.any((o) => o.id == 'esophagus'))
-                Positioned(
-                  top: 480 * 0.05,
-                  left: 180 * 0.5 - 12,
-                  child: _glow(24, 112, Colors.pink),
-                ),
-              if (hoveredOrgan?.id == 'liver' &&
-                  activeOrgans.any((o) => o.id == 'liver'))
-                Positioned(
-                  top: 480 * 0.25,
-                  right: 180 * 0.15,
-                  child: _glow(128, 80, Colors.orange),
-                ),
-              if (hoveredOrgan?.id == 'stomach' &&
-                  activeOrgans.any((o) => o.id == 'stomach'))
-                Positioned(
-                  top: 480 * 0.28,
-                  left: 180 * 0.10,
-                  child: _glow(96, 64, Colors.red),
-                ),
-              if (hoveredOrgan?.id == 'pancreas' &&
-                  activeOrgans.any((o) => o.id == 'pancreas'))
-                Positioned(
-                  top: 480 * 0.42,
-                  left: 180 * 0.25,
-                  child: _glow(80, 24, Colors.yellow),
-                ),
-              if (hoveredOrgan?.id == 'colon' &&
-                  activeOrgans.any((o) => o.id == 'colon'))
-                Positioned(
-                  top: 480 * 0.48,
-                  left: 180 * 0.5 - 88,
-                  child: _glow(176, 144, Colors.green),
-                ),
-              if (hoveredOrgan?.id == 'small_intestine' &&
-                  activeOrgans.any((o) => o.id == 'small_intestine'))
-                Positioned(
-                  top: 480 * 0.55,
-                  left: 180 * 0.5 - 56,
-                  child: _glow(112, 80, Colors.cyan),
-                ),
-              if (hoveredOrgan?.id == 'rectum' &&
-                  activeOrgans.any((o) => o.id == 'rectum'))
-                Positioned(
-                  bottom: 480 * 0.10,
-                  left: 180 * 0.5 - 16,
-                  child: _glow(32, 48, Colors.purple),
-                ),
+              // Organ Icons on the Skeleton
+              ...activeOrgans.map((organ) {
+                bool isHovered = hoveredOrgan?.id == organ.id;
+
+                Widget iconWidget = AnimatedOpacity(
+                  opacity: isHovered ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 300),
+                  child: AnimatedScale(
+                    scale: isHovered ? 1.5 : 1.0,
+                    duration: const Duration(milliseconds: 300),
+                    child: organ.iconPath != null
+                        ? Image.asset(organ.iconPath!, width: 50, height: 50)
+                        : const SizedBox.shrink(),
+                  ),
+                );
+
+                switch (organ.id) {
+                  case 'esophagus':
+                    return Positioned(
+                      top: 480 * 0.05,
+                      left: 180 * 0.5 - 12,
+                      child: SizedBox(
+                        width: 24,
+                        height: 112,
+                        child: Center(child: iconWidget),
+                      ),
+                    );
+                  case 'liver':
+                    return Positioned(
+                      top: 480 * 0.25,
+                      right: 180 * 0.15,
+                      child: SizedBox(
+                        width: 128,
+                        height: 80,
+                        child: Center(child: iconWidget),
+                      ),
+                    );
+                  case 'stomach':
+                    return Positioned(
+                      top: 480 * 0.28,
+                      left: 180 * 0.10,
+                      child: SizedBox(
+                        width: 96,
+                        height: 64,
+                        child: Center(child: iconWidget),
+                      ),
+                    );
+                  case 'pancreas':
+                    return Positioned(
+                      top: 480 * 0.42,
+                      left: 180 * 0.25,
+                      child: SizedBox(
+                        width: 80,
+                        height: 24,
+                        child: Center(child: iconWidget),
+                      ),
+                    );
+                  case 'colon':
+                    return Positioned(
+                      top: 480 * 0.48,
+                      left: 180 * 0.5 - 88,
+                      child: SizedBox(
+                        width: 176,
+                        height: 144,
+                        child: Center(child: iconWidget),
+                      ),
+                    );
+                  case 'small_intestine':
+                    return Positioned(
+                      top: 480 * 0.55,
+                      left: 180 * 0.5 - 56,
+                      child: SizedBox(
+                        width: 112,
+                        height: 80,
+                        child: Center(child: iconWidget),
+                      ),
+                    );
+                  case 'rectum':
+                    return Positioned(
+                      bottom: 480 * 0.10,
+                      left: 180 * 0.5 - 16,
+                      child: SizedBox(
+                        width: 32,
+                        height: 48,
+                        child: Center(child: iconWidget),
+                      ),
+                    );
+                  default:
+                    return const SizedBox.shrink();
+                }
+              }),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _glow(double w, double h, Color c) {
-    return AnimatedOpacity(
-      opacity: 1.0,
-      duration: const Duration(milliseconds: 300),
-      child: Container(
-        width: w,
-        height: h,
-        decoration: BoxDecoration(
-          color: c.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(w > h ? h / 2 : w / 2),
-          boxShadow: [
-            BoxShadow(
-              color: c.withValues(alpha: 0.6),
-              blurRadius: 20,
-              spreadRadius: 10,
-            ),
-          ],
         ),
       ),
     );
@@ -452,27 +481,27 @@ class _Step2OrganSymptomsState extends State<Step2OrganSymptoms> {
         right = 0.02;
         break;
       case 'liver':
-        top = 0.22;
+        top = 0.27;
         right = 0.02;
         break;
       case 'colon':
-        top = 0.48;
+        top = 0.52;
         right = 0.02;
         break;
       case 'rectum':
-        top = 0.78;
+        top = 0.77;
         right = 0.02;
         break;
       case 'stomach':
-        top = 0.26;
+        top = 0.20;
         left = 0.02;
         break;
       case 'pancreas':
-        top = 0.41;
+        top = 0.46;
         left = 0.02;
         break;
       case 'small_intestine':
-        top = 0.58;
+        top = 0.72;
         left = 0.02;
         break;
     }
@@ -483,49 +512,76 @@ class _Step2OrganSymptomsState extends State<Step2OrganSymptoms> {
       top: top != null ? 480 * top : null,
       left: left != null ? 360 * left : null,
       right: right != null ? 360 * right : null,
-      child: InkWell(
+      child: GestureDetector(
         onTap: () {
           setState(() => hoveredOrgan = organ);
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: isHovered
-                ? Colors.blue.withValues(alpha: 0.9)
-                : Colors.white.withValues(alpha: 0.85),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isHovered ? Colors.blue.shade200 : Colors.white70,
-            ),
-            boxShadow: isHovered
-                ? [
-                    BoxShadow(
-                      color: Colors.blue.withValues(alpha: 0.4),
-                      blurRadius: 15,
-                      spreadRadius: 2,
-                    ),
-                  ]
-                : const [BoxShadow(color: Colors.black12, blurRadius: 4)],
-          ),
+          transform: isHovered
+              ? (Matrix4.identity()..scale(1.10, 1.10, 1.10))
+              : Matrix4.identity(),
+          transformAlignment: Alignment.center,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                organ.name,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: isHovered ? Colors.white : Colors.blue.shade900,
-                ),
+              SizedBox(
+                width: 56,
+                height: 56,
+                child: organ.iconPath != null
+                    ? Image.asset(organ.iconPath!, fit: BoxFit.contain)
+                    : const SizedBox.shrink(),
               ),
-              const SizedBox(height: 2),
-              Text(
-                '${organ.percentage}% تأثر',
-                style: TextStyle(
-                  fontSize: 9,
-                  fontWeight: FontWeight.w600,
-                  color: isHovered ? Colors.white70 : Colors.blue.shade700,
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  gradient: isHovered
+                      ? LinearGradient(
+                          colors: [Colors.blue.shade600, Colors.blue.shade700],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : null,
+                  color: isHovered ? null : Colors.white.withValues(alpha: 0.9),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isHovered
+                        ? Colors.transparent
+                        : Colors.blue.shade100,
+                  ),
+                  boxShadow: isHovered
+                      ? [
+                          BoxShadow(
+                            color: Colors.blue.withValues(alpha: 0.4),
+                            blurRadius: 10,
+                          ),
+                        ]
+                      : const [BoxShadow(color: Colors.black12, blurRadius: 4)],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      organ.name,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: isHovered ? Colors.white : Colors.blue.shade900,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${organ.percentage}% تأثر',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: isHovered
+                            ? Colors.white.withValues(alpha: 0.9)
+                            : Colors.blue.shade900.withValues(alpha: 0.9),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -626,14 +682,14 @@ class OrganPainter extends CustomPainter {
 
     Offset p(double x, double y) => Offset(size.width * x, size.height * y);
 
-    drawLineMap("esophagus", p(0.88, 0.05), p(0.50, 0.08));
-    drawLineMap("liver", p(0.88, 0.25), p(0.64, 0.27));
-    drawLineMap("colon", p(0.88, 0.51), p(0.62, 0.53));
-    drawLineMap("rectum", p(0.88, 0.81), p(0.50, 0.85));
+    drawLineMap("esophagus", p(0.88, 0.10), p(0.50, 0.08));
+    drawLineMap("liver", p(0.88, 0.35), p(0.64, 0.27));
+    drawLineMap("colon", p(0.88, 0.60), p(0.62, 0.53));
+    drawLineMap("rectum", p(0.88, 0.85), p(0.50, 0.85));
 
-    drawLineMap("stomach", p(0.12, 0.30), p(0.36, 0.30));
-    drawLineMap("pancreas", p(0.12, 0.45), p(0.41, 0.44));
-    drawLineMap("small_intestine", p(0.12, 0.62), p(0.45, 0.60));
+    drawLineMap("stomach", p(0.12, 0.28), p(0.36, 0.30));
+    drawLineMap("pancreas", p(0.12, 0.54), p(0.41, 0.44));
+    drawLineMap("small_intestine", p(0.12, 0.80), p(0.45, 0.60));
   }
 
   @override

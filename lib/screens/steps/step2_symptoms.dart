@@ -61,56 +61,71 @@ const Map<String, List<String>> ORGAN_SYMPTOMS = {
   ],
 };
 
-IconData getSymptomIcon(String symptom) {
+Widget getSymptomIconWidget(String symptom, bool isSelected) {
+  final Color iconColor = isSelected
+      ? Colors.blue.shade700
+      : Colors.blue.shade500;
+
+  Widget stomachIcon() {
+    return Container(
+      width: 24,
+      height: 24,
+      decoration: const BoxDecoration(shape: BoxShape.circle),
+      child: ClipOval(
+        child: Image.asset('assets/images/icon.jpeg', fit: BoxFit.cover),
+      ),
+    );
+  }
+
   switch (symptom) {
     case "حموضة":
     case "حرقة مزمنة بالمريء":
-      return Icons.local_fire_department_outlined;
+      return Icon(Icons.whatshot, color: iconColor, size: 24);
     case "ألم أعلى البطن":
     case "ألم مزمن بالبطن":
-      return Icons.monitor_heart_outlined;
+      return Icon(Icons.monitor_heart, color: iconColor, size: 24);
     case "ألم بالصدر":
-      return Icons.favorite_border;
+      return Icon(Icons.favorite_border, color: iconColor, size: 24);
     case "صعوبة بلع":
     case "سوء هضم":
-      return Icons.sentiment_dissatisfied;
+      return Icon(Icons.sentiment_dissatisfied, color: iconColor, size: 24);
     case "فقدان وزن غير مبرر":
-      return Icons.balance;
-    case "ألم في المعدة":
-    case "ألم بطن":
-      return Icons.sick_outlined;
+      return Icon(Icons.balance, color: iconColor, size: 24);
     case "ألم شديد في المعدة":
-    case "ألم شديد أعلى البطن":
     case "ألم أثناء التبرز":
-      return Icons.warning_amber_rounded;
+    case "ألم شديد أعلى البطن":
+      return Icon(Icons.warning_amber_rounded, color: iconColor, size: 24);
     case "غثيان أو قيء":
-      return Icons.cloud_outlined;
+      return Icon(Icons.cloud_outlined, color: iconColor, size: 24);
     case "إسهال متكرر":
     case "كثرة الغازات":
-      return Icons.air;
+      return Icon(Icons.air, color: iconColor, size: 24);
     case "انتفاخ البطن":
     case "تورم البطن (استسقاء)":
-      return Icons.radio_button_unchecked;
+      return Icon(Icons.radio_button_unchecked, color: iconColor, size: 24);
     case "نقص فيتامينات أو عناصر غذائية":
-      return Icons.battery_alert_outlined;
+      return Icon(Icons.battery_alert_outlined, color: iconColor, size: 24);
     case "تقلصات بالبطن":
-      return Icons.bolt;
+      return Icon(Icons.bolt, color: iconColor, size: 24);
     case "إسهال دموي":
     case "نزيف من الشرج أو مع البراز":
     case "إفرازات من الشرج":
-      return Icons.water_drop_outlined;
+      return Icon(Icons.water_drop_outlined, color: iconColor, size: 24);
     case "إسهال متكرر أو إمساك متكرر":
-      return Icons.sync;
+      return Icon(Icons.sync, color: iconColor, size: 24);
     case "شعور بعدم اكتمال حركة الأمعاء":
-      return Icons.error_outline;
+      return Icon(Icons.error_outline, color: iconColor, size: 24);
     case "تعب عام وإرهاق":
-      return Icons.battery_0_bar;
+      return Icon(Icons.battery_0_bar, color: iconColor, size: 24);
     case "اصفرار الجلد أو العينين":
-      return Icons.remove_red_eye_outlined;
+      return Icon(Icons.remove_red_eye_outlined, color: iconColor, size: 24);
     case "ألم بالبطن بعد الأكل الدسم":
-      return Icons.restaurant_menu;
+      return Icon(Icons.restaurant_menu, color: iconColor, size: 24);
+    case "ألم في المعدة":
+    case "ألم بطن":
+      return stomachIcon();
     default:
-      return Icons.monitor_heart_outlined;
+      return Icon(Icons.monitor_heart_outlined, color: iconColor, size: 24);
   }
 }
 
@@ -305,7 +320,7 @@ class _Step2SymptomsState extends State<Step2Symptoms> {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  childAspectRatio: 0.85,
+                  childAspectRatio: 0.75,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
                 ),
@@ -357,21 +372,17 @@ class _Step2SymptomsState extends State<Step2Symptoms> {
                                     : Colors.grey.shade100,
                               ),
                             ),
-                            child: Icon(
-                              getSymptomIcon(symptom),
-                              color: isSelected
-                                  ? Colors.blue.shade700
-                                  : Colors.blue.shade500,
-                              size: 24,
+                            child: Center(
+                              child: getSymptomIconWidget(symptom, isSelected),
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           Text(
                             symptom,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w900,
                               color: isSelected
                                   ? Colors.blue.shade900
                                   : const Color(0xFF101828),

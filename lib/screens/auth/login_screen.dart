@@ -30,11 +30,30 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       // Simulate network request
       await Future.delayed(const Duration(seconds: 1));
-      setState(() {
-        isLoading = false;
-      });
+
+      final emailLower = email.text.trim().toLowerCase();
+      if ((emailLower == "dr.hany@gmail.com" ||
+              emailLower == "salma@gmail.com" ||
+              emailLower == "abzoo@gmail.com" ||
+              emailLower == "shahd@gmail.com" ||
+              emailLower == "mig@gmail.com" ||
+              emailLower == "shaimaa@gmail.com") &&
+          password.text.trim() == "123456") {
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/step1');
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            customSnackBar('البريد الإلكتروني أو كلمة المرور غير صحيحة'),
+          );
+        }
+      }
+
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/step1');
+        setState(() {
+          isLoading = false;
+        });
       }
     }
   }
@@ -48,9 +67,9 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       isLoading = false;
     });
-    if (mounted) {
-      Navigator.pushReplacementNamed(context, '/step1');
-    }
+    // if (mounted) {
+    //   Navigator.pushReplacementNamed(context, '/step1');
+    // }
   }
 
   Future<void> forgetPass() async {
@@ -106,11 +125,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 CustomTextfield(
                                   validatorr: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please input your email';
-                                    }
-                                    if (!value.endsWith("@gmail.com")) {
-                                      return 'Please enter a valid email address ';
+                                    if (value == null || !value.contains("@")) {
+                                      return 'البريد الإلكتروني غير صالح';
                                     }
                                     return null;
                                   },
@@ -120,11 +136,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Gap(sectionGap * 0.5),
                                 CustomTextfield(
                                   validatorr: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please input your password';
-                                    }
-                                    if (value.length < 8) {
-                                      return 'Password must be at least 8 characters';
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'كلمة المرور مطلوبة';
                                     }
                                     return null;
                                   },

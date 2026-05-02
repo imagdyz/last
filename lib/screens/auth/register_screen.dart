@@ -29,11 +29,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       });
       // Simulate network request
       await Future.delayed(const Duration(seconds: 1));
-      setState(() {
-        isLoading = false;
-      });
+
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/step1');
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
       }
     }
   }
@@ -72,16 +76,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               children: [
                                 Gap(sectionGap * 0.5),
                                 CustomTextfield(
+                                  validatorr: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Username مطلوب';
+                                    }
+                                    return null;
+                                  },
                                   type: userName,
                                   hintText: 'Enter Your Username',
                                 ),
                                 Gap(sectionGap * 0.5),
                                 CustomTextfield(
+                                  validatorr: (value) {
+                                    if (value == null || !value.contains("@")) {
+                                      return 'Email غير صحيح';
+                                    }
+                                    return null;
+                                  },
                                   type: email,
                                   hintText: 'Enter Your Email',
                                 ),
                                 Gap(sectionGap * 0.5),
                                 CustomTextfield(
+                                  validatorr: (value) {
+                                    if (value == null || value.length < 6) {
+                                      return 'Password لازم 6 حروف على الأقل';
+                                    }
+                                    return null;
+                                  },
                                   type: password,
                                   ispassword: isTrue,
                                   icons: InkWell(
